@@ -49,7 +49,7 @@ public final class QueryPreprocessor {
   private static final char MINUS = '-';
   private static final char PLUS = '+';
   private static final char ASTERISK = '*';
-  private static final char EXPLANATION_MARK = '!';
+  private static final char EXCLAMATION_MARK = '!';
   private static final char BACKSLASH = '\\';
   private static final char AMPERSAND = '&';
   private static final char PIPE = '|';
@@ -57,7 +57,7 @@ public final class QueryPreprocessor {
   private static final Set<Character> ESCAPED_CHARACTERS = new HashSet<Character>(Arrays.asList(
     MINUS,
     PLUS,
-    EXPLANATION_MARK,
+    EXCLAMATION_MARK,
     BACKSLASH,
     AMPERSAND,
     PIPE,
@@ -67,7 +67,7 @@ public final class QueryPreprocessor {
   private static final Set<Character> UNARY_OPERATORS = new HashSet<Character>(Arrays.asList(
     MINUS,
     PLUS,
-    EXPLANATION_MARK
+    EXCLAMATION_MARK
   ));
 
   private static final Set<String> BINARY_OPERATORS = new HashSet<String>(Arrays.asList("&&", "||"));
