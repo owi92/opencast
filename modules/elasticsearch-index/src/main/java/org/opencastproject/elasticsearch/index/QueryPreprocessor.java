@@ -19,7 +19,7 @@
  *
  */
 
-package org.opencastproject.adminui.util;
+package org.opencastproject.elasticsearch.index;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,19 +55,19 @@ public final class QueryPreprocessor {
   private static final char PIPE = '|';
 
   private static final Set<Character> ESCAPED_CHARACTERS = new HashSet<Character>(Arrays.asList(
-    MINUS,
-    PLUS,
-    EXCLAMATION_MARK,
-    BACKSLASH,
-    AMPERSAND,
-    PIPE,
-    '(', ')', '{', '}', '[', ']', ':', '^', '~'
+          MINUS,
+          PLUS,
+          EXCLAMATION_MARK,
+          BACKSLASH,
+          AMPERSAND,
+          PIPE,
+          '(', ')', '{', '}', '[', ']', ':', '^', '~', '\"', '/'
   ));
 
   private static final Set<Character> UNARY_OPERATORS = new HashSet<Character>(Arrays.asList(
-    MINUS,
-    PLUS,
-    EXCLAMATION_MARK
+          MINUS,
+          PLUS,
+          EXCLAMATION_MARK
   ));
 
   private static final Set<String> BINARY_OPERATORS = new HashSet<String>(Arrays.asList("&&", "||"));
@@ -95,7 +95,8 @@ public final class QueryPreprocessor {
       if (isUnaryOperator(token)) {
         sanitizedToken = sanitizeUnaryOperator(token);
       } else if (isBinaryOperator(token)) {
-        if ((i == 0) || isBinaryOperator(tokens.get(i - 1)) || (i >= tokens.size() - 1) || isBinaryOperator(tokens.get(i + 1))) {
+        if ((i == 0) || isBinaryOperator(tokens.get(i - 1))
+                || (i >= tokens.size() - 1) || isBinaryOperator(tokens.get(i + 1))) {
           // Escape operator since operands missing
           sanitizedToken = "" + BACKSLASH + token;
         } else {
@@ -201,8 +202,8 @@ public final class QueryPreprocessor {
           tokens.add(currentToken);
           currentToken = "";
           openDoubleQuote = false;
-        } else if (currentToken.isEmpty()
-                   || (isUnaryOperator("" + charAt(i - 1, query)) && Character.isWhitespace(charAt(i - 2, query)))) {
+        } else if (currentToken.isEmpty()  || (isUnaryOperator("" + charAt(i - 1, query))
+                && Character.isWhitespace(charAt(i - 2, query)))) {
           currentToken += DOUBLE_QUOTE;
           openDoubleQuote = true;
         } else {
@@ -216,11 +217,11 @@ public final class QueryPreprocessor {
         // We only allow unary operators as first character of a token
         currentToken += ch;
       } else if (isBinaryOperator("" + ch + charAt(i + 1, query))
-                 && Character.isWhitespace(charAt(i - 1, query))
-                 && Character.isWhitespace(charAt(i + 2, query))) {
-          // Binary operator detected, i.e. whitespace delimited && or ||
-          tokens.add("" + ch + ch);
-          i++; // We nastily skip the binary operator, i.e. we are taken two characters in this round
+                    && Character.isWhitespace(charAt(i - 1, query))
+                    && Character.isWhitespace(charAt(i + 2, query))) {
+        // Binary operator detected, i.e. whitespace delimited && or ||
+        tokens.add("" + ch + ch);
+        i++; // We nastily skip the binary operator, i.e. we are taken two characters in this round
       } else if (Character.isWhitespace(ch)) {
         // Whitespace delimits tokens
         if (!currentToken.isEmpty()) {
