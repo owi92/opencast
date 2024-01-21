@@ -735,6 +735,14 @@
     <bundle start-level="82">mvn:org.opencastproject/opencast-annotation-impl/${project.version}</bundle>
   </feature>
 
+  <feature name="opencast-plugin-graphql" version="${project.version}">
+    <feature>opencast-allinone</feature>
+    <feature>opencast-admin</feature>
+    <feature>opencast-adminpresentation</feature>
+    <bundle start-level="82">mvn:org.opencastproject/opencast-graphql/${project.version}</bundle>
+    <bundle start-level="82">mvn:org.opencastproject/opencast-graphql-ui/${project.version}</bundle>
+  </feature>
+
   <feature name="opencast-pluginmanager" version="${project.version}">
     <feature>opencast-core</feature>
     <bundle start-level="86">mvn:org.opencastproject/opencast-plugin-manager/${project.version}</bundle>
