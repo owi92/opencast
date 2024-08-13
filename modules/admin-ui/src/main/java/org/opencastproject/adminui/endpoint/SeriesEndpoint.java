@@ -1132,6 +1132,85 @@ public Response getSeriesHostPages(@PathParam("seriesId") String seriesId) {
   }
 
   @POST
+  @Path("{seriesId}/tobira/path")
+  @RestQuery(
+          name = "updateSeriesTobiraPath",
+          description = "Updates the path of the given series in a connected Tobira instance",
+          returnDescription = "Status code",
+          pathParameters = { @RestParameter(
+                  name = "seriesId",
+                  isRequired = true,
+                  description = "The series id",
+                  type = STRING) },
+          restParameters = {
+                  @RestParameter(
+                          name = "pathComponents",
+                          isRequired = true,
+                          description = "List of realms with name and path segment on path to series.",
+                          type = TEXT),
+                  @RestParameter(
+                          name = "currentPath",
+                          isRequired = false,
+                          description = "Path where the series is currently mounted.",
+                          type = STRING),
+                  @RestParameter(
+                          name = "targetPath",
+                          isRequired = true,
+                          description = "Path where the series will be mounted.",
+                          type = STRING) },
+          responses = {
+                  @RestResponse(
+                          responseCode = SC_OK,
+                          description = "The path of the series has successfully been updated in Tobira."),
+                  @RestResponse(
+                          responseCode = SC_NOT_FOUND,
+                          description = "Tobira doesn't know about the given series"),
+                  @RestResponse(
+                          responseCode = SC_SERVICE_UNAVAILABLE,
+                          description = "Tobira is not configured (correctly)") })
+  public Response updateSeriesTobiraPath(
+    @PathParam("seriesId") String seriesId,
+    @FormParam("pathComponents") String pathComponents,
+    @FormParam("currentPath") String currentPath,
+    @FormParam("targetPath") String targetPath
+  ) throws IOException, InterruptedException {
+    if (targetPath == null) {
+      throw new WebApplicationException("target path is missing", BAD_REQUEST);
+    }
+
+    var tobira = getTobira();
+    if (!tobira.ready()) {
+      return Response.status(Status.SERVICE_UNAVAILABLE)
+              .entity("Tobira is not configured (correctly)")
+              .build();
+    }
+
+    try {
+      var paths = (List<JSONObject>) new JSONParser().parse(pathComponents);
+
+      var mountParams = new JSONObject();
+      mountParams.put("seriesId", seriesId);
+      mountParams.put("targetPath", targetPath);
+
+      tobira.createRealmLineage(paths);
+      tobira.addSeriesMountPoint(mountParams);
+
+      if (currentPath != null) {
+        var unmountParams = new JSONObject();
+        unmountParams.put("seriesId", seriesId);
+        unmountParams.put("currentPath", currentPath);
+        tobira.removeSeriesMountPoint(unmountParams);
+      }
+
+      return ok();
+    } catch (Exception e) {
+      return Response.status(Status.INTERNAL_SERVER_ERROR)
+              .entity("Internal server error: " + e.getMessage())
+              .build();
+    }
+  }
+
+  @POST
   @Path("/{seriesId}/access")
   @RestQuery(name = "applyAclToSeries", description = "Immediate application of an ACL to a series", returnDescription = "Status code", pathParameters = { @RestParameter(name = "seriesId", isRequired = true, description = "The series ID", type = STRING) }, restParameters = {
           @RestParameter(name = "acl", isRequired = true, description = "The ACL to apply", type = STRING),
