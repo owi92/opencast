@@ -246,17 +246,9 @@ public class RestPublisher implements RestConstants {
    *          The service itself
    */
   protected synchronized void createEndpoint(ServiceReference<?> ref, Object service) {
-    String serviceType = (String) ref.getProperty(SERVICE_TYPE_PROPERTY);
     String servicePath = (String) ref.getProperty(SERVICE_PATH_PROPERTY);
-    boolean servicePublishFlag = ref.getProperty(SERVICE_PUBLISH_PROPERTY) == null
-            || Boolean.parseBoolean(ref.getProperty(SERVICE_PUBLISH_PROPERTY).toString());
-    boolean jobProducer = ref.getProperty(SERVICE_JOBPRODUCER_PROPERTY) != null
-            && Boolean.parseBoolean(ref.getProperty(SERVICE_JOBPRODUCER_PROPERTY).toString());
-
     serviceBeans.add(service);
-
     rewire();
-
     logger.info("Registered REST endpoint at " + servicePath);
   }
 
