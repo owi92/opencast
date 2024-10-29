@@ -22,7 +22,7 @@ Note: You have to configure the `Microsoft Azure Transcription Service` first to
 
 ## Examples
 
-The example below will start transcription on first trimmed media file found in the media package only if `captions/source` element doesn't exist yet. The encoding profile to extract audio stream is `custom-transcription-azure.audio`. 
+The example below will start the transcription on the first trimmed media file found in the media package, but only if `captions/source` element doesn't exist yet. The encoding profile to extract the audio stream is `custom-transcription-azure.audio`. 
 
 ```xml
 <!-- This operation will start the transcription job -->
@@ -41,7 +41,7 @@ The example below will start transcription on first trimmed media file found in 
 </operation>
 ```
 
-Next example shows you how to create a transcription of `presenter/trimmed` media file with the given language code of `de-DE`. The transcription will start if `captions/source` element is missing.
+The next example shows you how to create a transcription of the `presenter/trimmed` media file with the language code `de-DE`. The transcription will start if `captions/source` element is missing.
 
 ```xml
 <!-- This operation will start the transcription job -->
