@@ -1,6 +1,6 @@
 # Microsoft Azure Transcription Engine
 ## Overview
-Microsoft Azure Opencast transcription service uses the Microsoft Azure Speech Service API to create a transcript from audio track. The transcription is done asynchronously to speed up processing. When the result is generated, an attach-transcript workflow will be started to archive and publish transcript. To get more in touch with Microsoft Azure Speech Service API, read [documentation here](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/batch-transcription).
+Microsoft Azure Opencast transcription service uses the Microsoft Azure Speech Service API to create a transcript from an audio track. The transcription is done asynchronously to speed up processing. When the result is generated, an attach-transcript workflow will be started to archive and publish the transcript. To find out more about the Microsoft Azure Speech Service API, read [documentation here](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/batch-transcription).
 
 Note: You must have an active subscription to use Microsoft Azure Speech Services.
 
@@ -9,7 +9,7 @@ Note: You must have an active subscription to use Microsoft Azure Speech Service
 ### Step 1: Get Azure subscription credentials
 * [Create an Azure subscription](https://azure.microsoft.com/en-US/free/cognitive-services/)
 * [Create a storage account](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-create)
-* Get storage account access key. Go to [Azure Portal](https://portal.azure.com) > `Storage accounts`, select your storage account, choose `Security + networking` > `Access keys.` Copy the key.
+* Get the storage account access key. Go to [Azure Portal](https://portal.azure.com) > `Storage accounts`, select your storage account, choose `Security + networking` > `Access keys.` Copy the key.
 * [Create a speech resource](https://portal.azure.com/#create/Microsoft.CognitiveServicesSpeechServices)
 * Get the subscription key and region. After your Speech resource is deployed, select `Go to resource` to view and
   manage keys. For more information about Cognitive Services resources, see
@@ -24,11 +24,11 @@ Edit `etc/org.opencastproject.transcription.microsoft.azure.MicrosoftAzureTransc
 * Set `azure_container_name` to a container name you want to use
 * Set `azure_speech_services_endpoint` to your speech services endpoint
 * Set `azure_cognitive_services_subscription_key` to the speech services subscription key
-* Review and edit all other configurations in this file
+* Review the other configuration options in this file and edit as needed
 
 ### Step 3: Add a workflow operations or create new workflow to start transcription
 
-Edit workflow to start transcription, e.g. `etc/workflows/partial-publish.xml`. You have to add the `microsoft-azure-start-transcription` operation right after the step creating of the final cut of the media files. This operation may look like
+Edit a workflow to start a transcription, e.g. `etc/workflows/partial-publish.xml`. You have to add the `microsoft-azure-start-transcription` operation right after the creation of the final cut of the media files. This operation may look like
 
 ```xml
 <!-- This is a typical operation to generate final cut -->
@@ -149,6 +149,6 @@ profile.transcription-azure.audio.ffmpeg.command = -i #{in.video.path} \
     #{out.dir}/#{out.name}#{out.suffix}
 ```
 
-### Step 6: Enable transcription plugin
+### Step 6: Enable the transcription plugin
 
-Transcription plugins are disabled by default. Enable it in the `etc/org.opencastproject.plugin.impl.PluginManagerImpl.cfg` configuration file setting the `opencast-plugin-transcription-services` to `true`.
+Transcription plugins are disabled by default. Enable it in the `etc/org.opencastproject.plugin.impl.PluginManagerImpl.cfg` configuration file by setting the `opencast-plugin-transcription-services` to `true`.
