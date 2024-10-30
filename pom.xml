@@ -176,6 +176,7 @@
     <module>modules/oaipmh-persistence</module>
     <module>modules/oaipmh-remote</module>
     <module>modules/oaipmh</module>
+    <module>modules/runtime-info-openapi-ui</module>
     <module>modules/playlists</module>
     <module>modules/plugin-manager</module>
     <module>modules/presets</module>

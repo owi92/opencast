@@ -132,12 +132,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-rt-rs-service-description-swagger-ui</artifactId>
-      <version>${cxf.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>com.entwinemedia.common</groupId>
       <artifactId>functional</artifactId>
     </dependency>

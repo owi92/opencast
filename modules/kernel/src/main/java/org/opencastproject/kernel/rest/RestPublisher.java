@@ -36,7 +36,6 @@ import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.openapi.OpenApiCustomizer;
 import org.apache.cxf.jaxrs.openapi.OpenApiFeature;
 import org.apache.cxf.jaxrs.provider.json.JSONProvider;
-import org.apache.cxf.jaxrs.swagger.ui.SwaggerUiConfig;
 import org.apache.cxf.transport.servlet.CXFNonSpringServlet;
 import org.apache.http.HttpStatus;
 import org.codehaus.jettison.mapped.Configuration;
@@ -318,11 +317,7 @@ public class RestPublisher implements RestConstants {
     OpenApiCustomizer customizer = new OpenApiCustomizer();
     customizer.setDynamicBasePath(false);
     openApiFeature.setCustomizer(customizer);
-    SwaggerUiConfig config = new SwaggerUiConfig();
-    config.setDeepLinking(true);
-    config.setUrl("/openapi.json");
-    config.setQueryConfigEnabled(false);
-    openApiFeature.setSwaggerUiConfig(config);
+    openApiFeature.setSupportSwaggerUi(false);
     return openApiFeature;
   }
 
