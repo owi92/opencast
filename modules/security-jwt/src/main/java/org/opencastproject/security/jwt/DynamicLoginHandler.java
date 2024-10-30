@@ -292,26 +292,32 @@ public class DynamicLoginHandler implements InitializingBean, JWTLoginHandler {
       try {
         var ocClaim = jwt.getClaim("oc");
         if (ocClaim != null && !ocClaim.isNull()) {
-          for (String entry : ocClaim.asArray(String.class)) {
-            var parts = entry.split(":", 3);
-            if (parts.length != 3) {
-              logger.debug("entry in 'oc' claim does not have three ':' separated parts, ignoring");
+          for (var entry : ocClaim.asMap().entrySet()) {
+            var key = entry.getKey();
+            var parts = key.split(":", 2);
+            if (parts.length != 2) {
+              logger.debug("key in 'oc' claim does not start with 'x:' -> ignoring");
               continue;
             }
+            var type = parts[0];
+            var id = parts[1];
 
-            var actions = parts[0];
-            var type = parts[1];
-            var id = parts[2];
-            for (var action : actions.split("\\+")) {
-              if (action.isBlank()) {
-                continue;
-              }
+            try {
+              for (var actionObj : (List<?>) entry.getValue()) {
+                var action = (String) actionObj;
+                if (action.isBlank()) {
+                  continue;
+                }
 
-              if (type.equals("e")) {
-                addRole.accept(SecurityUtil.getEpisodeRoleId(id, action));
-              } else {
-                logger.debug("in 'oc' claim: granting access to item type '{}' is not yet supported", type);
+                if (type.equals("e")) {
+                  addRole.accept(SecurityUtil.getEpisodeRoleId(id, action));
+                } else {
+                  logger.debug("in 'oc' claim: granting access to item type '{}' is not yet supported", type);
+                }
               }
+            } catch (ClassCastException e) {
+              logger.debug("value in 'oc' claim is not a string array -> ignoring");
+              continue;
             }
           }
         }

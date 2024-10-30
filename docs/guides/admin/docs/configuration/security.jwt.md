@@ -40,10 +40,10 @@ This schema is designed to be flexible and support all current and conceivable f
 
     // Authorization, i.e. privileges the request/user should have
     "roles": ["ROLE_STUDIO", "ROLE_API_EVENTS_VIEW"],
-    "oc": [
-        "read+customaction:e:d622b861-4264-4947-8db1-c754c5956433",
-        "write:s:4ed02421-144c-42a1-b98a-22e84f3ac691"
-    ]
+    "oc": {
+        "e:d622b861-4264-4947-8db1-c754c5956433": ["read, "annotate"],
+        "s:4ed02421-144c-42a1-b98a-22e84f3ac691": ["write"]
+    }
 }
 ```
 
@@ -62,15 +62,12 @@ A claim being "required" means that the JWT provider (e.g. Tobira, LMS) has to i
 
 - *Authorization*: at least one of these claims has to be set, as otherwise no privileges are granted (which is the same as not sending a JWT at all).
     - `roles`: array of strings, specifying roles to grant to the request/user directly.
-    - `oc`: array of strings, grants access to single items in Opencast. The custom syntax is terse in order to keep JWTs as small as possible. Each string consists of three parts, which are separated by a colon (`:`):
-        - *Action(s)*: the first part specifies what actions are granted, corresponding to actions in the OC ACLs, e.g. `read` and `write`. Multiple actions can be specified by joining them with `+`. To keep the syntax unambigious, actions cannot contain `:` or `+` (ideally they are ASCII alphabetic only!). To further preserve space, some actions imply others:
-            - `write` implies `read` access
-            - `annotate` implies `read` access
-        - *Item Type*: The second part specifies what type of item this applies to. Note: giving access to a series or playlist only gives access to that item directly, and *not* to its videos (e.g. give write access for a series to be able to edit its metadata or add videos to it).
+    - `oc`: JSON map that grants access to single items in Opencast, as identified by the map key.
+        - The map key consists of a one-letter prefix (the item type), a colon, and finally the actual ID of the Opencast item. The following item types are supported. Note: giving access to a series or playlist only gives access to that item directly, and *not* to its videos (e.g. give write access for a series to be able to edit its metadata or add videos to it).
             - `e`: event
             - `s`: series
             - `p`: playlist
-        - *ID*: the final part specifies the ID of the item that is granted access to.
+        - The map value is just an array of actions, corresponding to actions in the OC ACLs, e.g. `read` and `write`.
 
 
 ### Examples
@@ -82,7 +79,7 @@ An external application wants a user to load a protected static file from Openca
 ```json
 {
     "exp": 1499863217,
-    "oc": ["read:e:d622b861-4264-4947-8db1-c754c5956433"]
+    "oc": { "e:d622b861-4264-4947-8db1-c754c5956433": ["read"] }
 }
 ```
 
