@@ -6,7 +6,7 @@
     "html-linter": "html-linter --config ../../docs/checkstyle/html-linter.json 'src/main/resources/**/*.html'"
   },
   "devDependencies": {
-    "eslint": "^9.13.0",
+    "eslint": "^9.14.0",
     "eslint-config-opencast": "file:../../docs/checkstyle/eslint-config",
     "eslint-plugin-header": "^3.1.1",
     "html-linter": "^1.1.1"
