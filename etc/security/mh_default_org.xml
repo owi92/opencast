@@ -40,6 +40,9 @@
     <sec:intercept-url pattern="/docs.*" access="ROLE_ANONYMOUS" />
     <sec:intercept-url pattern="/rest_docs.*" access="ROLE_ANONYMOUS" />
 
+    <!-- Protect access to the REST API documentation -->
+    <sec:intercept-url pattern="/rest-docs/**" access="ROLE_ADMIN, ROLE_USER" />
+
     <!-- Allow anonymous access to the player redirect -->
     <sec:intercept-url pattern="/play/*" access="ROLE_ANONYMOUS" />
 
