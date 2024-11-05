@@ -38,6 +38,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static javax.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 import static org.opencastproject.index.service.util.RestUtils.conflictJson;
 import static org.opencastproject.index.service.util.RestUtils.notFound;
@@ -59,6 +60,8 @@ import static org.opencastproject.util.doc.rest.RestParameter.Type.TEXT;
 
 import org.opencastproject.adminui.exception.JobEndpointException;
 import org.opencastproject.adminui.impl.AdminUIConfiguration;
+import org.opencastproject.adminui.tobira.TobiraException;
+import org.opencastproject.adminui.tobira.TobiraService;
 import org.opencastproject.adminui.util.BulkUpdateUtil;
 import org.opencastproject.adminui.util.QueryPreprocessor;
 import org.opencastproject.assetmanager.api.AssetManager;
@@ -85,6 +88,7 @@ import org.opencastproject.index.service.exception.IndexServiceException;
 import org.opencastproject.index.service.exception.UnsupportedAssetException;
 import org.opencastproject.index.service.impl.util.EventUtils;
 import org.opencastproject.index.service.resources.list.provider.EventsListProvider.Comments;
+import org.opencastproject.index.service.resources.list.provider.EventsListProvider.IsPublished;
 import org.opencastproject.index.service.resources.list.query.EventListQuery;
 import org.opencastproject.index.service.resources.list.query.SeriesListQuery;
 import org.opencastproject.index.service.util.JSONUtils;
@@ -216,6 +220,7 @@ import javax.ws.rs.core.Response.Status;
  * This first implementation uses the {@link org.opencastproject.assetmanager.api.AssetManager}. In a later iteration
  * the endpoint may abstract over the concrete archive.
  */
+@Path("/admin-ng/event")
 public abstract class AbstractEventEndpoint {
 
   /**
@@ -1825,6 +1830,55 @@ public abstract class AbstractEventEndpoint {
   }
 
   @GET
+  @Path("{eventId}/tobira/pages")
+  @RestQuery(
+          name = "getEventHostPages",
+          description = "Returns the pages of a connected Tobira instance that contain the given event",
+          returnDescription = "The Tobira pages that contain the given event",
+          pathParameters = {
+                  @RestParameter(
+                          name = "eventId",
+                          isRequired = true,
+                          description = "The event identifier",
+                          type = STRING
+                  ),
+          },
+          responses = {
+                  @RestResponse(
+                          responseCode = SC_OK,
+                          description = "The Tobira pages containing the given event"
+                  ),
+                  @RestResponse(
+                          responseCode = SC_NOT_FOUND,
+                          description = "Tobira doesn't know about the given event"
+                  ),
+                  @RestResponse(
+                          responseCode = SC_SERVICE_UNAVAILABLE,
+                          description = "Tobira is not configured (correctly)"
+                  ),
+          }
+  )
+  public Response getEventHostPages(@PathParam("eventId") String eventId) {
+    var tobira = TobiraService.getTobira(getSecurityService().getOrganization().getId());
+    if (!tobira.ready()) {
+      return Response.status(Status.SERVICE_UNAVAILABLE)
+              .entity("Tobira is not configured (correctly)")
+              .build();
+    }
+
+    try {
+      var eventData = tobira.getEventHostPages(eventId);
+      if (eventData == null) {
+        throw new WebApplicationException(NOT_FOUND);
+      }
+      eventData.put("baseURL", tobira.getOrigin());
+      return Response.ok(eventData.toJSONString()).build();
+    } catch (TobiraException e) {
+      throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @GET
   @Path("{eventId}/workflows.json")
   @Produces(MediaType.APPLICATION_JSON)
   @RestQuery(name = "geteventworkflows", description = "Returns all the data related to the workflows tab in the event details modal as JSON", returnDescription = "All the data related to the event workflows tab as JSON", pathParameters = {
@@ -2580,6 +2634,23 @@ public abstract class AbstractEventEndpoint {
           default:
             logger.info("Unknown comment {}", filters.get(name));
             return Response.status(SC_BAD_REQUEST).build();
+        }
+      }
+      if (EventListQuery.FILTER_IS_PUBLISHED_NAME.equals(name)) {
+        if (filters.containsKey(name)) {
+          switch (IsPublished.valueOf(filters.get(name))) {
+            case YES:
+              query.withIsPublished(true);
+              break;
+            case NO:
+              query.withIsPublished(false);
+              break;
+            default:
+              break;
+          }
+        } else {
+          logger.info("Query for invalid published status: {}", filters.get(name));
+          return Response.status(SC_BAD_REQUEST).build();
         }
       }
       if (EventListQuery.FILTER_STARTDATE_NAME.equals(name)) {

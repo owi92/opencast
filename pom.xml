@@ -58,6 +58,7 @@
     <org.osgi.service.http.version>1.2.2</org.osgi.service.http.version>
     <org.osgi.service.http.whiteboard.version>1.1.1</org.osgi.service.http.whiteboard.version>
     <org.osgi.service.jaxrs.version>1.0.1</org.osgi.service.jaxrs.version>
+    <org.osgi.service.configurator.version>1.0.1</org.osgi.service.configurator.version>
     <querydsl.version>3.7.4</querydsl.version>
     <rest-assured.version>4.4.0</rest-assured.version>
     <spring.version>3.1.4.RELEASE</spring.version>
@@ -175,6 +176,7 @@
     <module>modules/oaipmh-persistence</module>
     <module>modules/oaipmh-remote</module>
     <module>modules/oaipmh</module>
+    <module>modules/runtime-info-openapi-ui</module>
     <module>modules/playlists</module>
     <module>modules/plugin-manager</module>
     <module>modules/presets</module>
@@ -641,7 +643,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
-          <version>3.11.0</version>
+          <version>3.15.1</version>
         </plugin>
         <plugin>
           <groupId>org.antlr</groupId>
@@ -764,7 +766,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-            <version>3.3.0</version>
+            <version>3.3.1</version>
             <executions>
               <execution>
                 <id>attach-sources</id>
@@ -886,6 +888,11 @@
         <groupId>org.osgi</groupId>
         <artifactId>org.osgi.service.jaxrs</artifactId>
         <version>${org.osgi.service.jaxrs.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.service.configurator</artifactId>
+        <version>${org.osgi.service.configurator.version}</version>
       </dependency>
       <dependency>
         <groupId>org.osgi</groupId>
@@ -1091,7 +1098,7 @@
       <dependency>
         <groupId>org.owasp.esapi</groupId>
         <artifactId>esapi</artifactId>
-        <version>2.5.3.1</version>
+        <version>2.5.5.0</version>
       </dependency>
       <dependency>
         <groupId>org.opensaml</groupId>
@@ -1150,12 +1157,12 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.36</version>
+        <version>2.0.16</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-reload4j</artifactId>
-        <version>1.7.36</version>
+        <version>2.0.16</version>
         <scope>test</scope>
       </dependency>
       <!-- apache commons syncing -->
@@ -1220,6 +1227,11 @@
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
         <version>${joda-time.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.swagger.core.v3</groupId>
+        <artifactId>swagger-annotations</artifactId>
+        <version>2.1.13</version>
       </dependency>
       <!-- influx -->
       <dependency>
@@ -1308,7 +1320,7 @@
       <dependency>
         <groupId>org.apache.servicemix.bundles</groupId>
         <artifactId>org.apache.servicemix.bundles.xalan</artifactId>
-        <version>2.7.2_3</version>
+        <version>2.7.3_3</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.gson</groupId>

@@ -108,7 +108,7 @@ A list of everything.
     - [AmberScript](transcription.configuration/amberscripttranscripts.md)
     - [Google Speech](transcription.configuration/googlespeechtranscripts.md)
     - [IBM Watson](transcription.configuration/watsontranscripts.md)
-    - [Microsoft Azure](transcription.configuration/microsoftazuretranscripts.md)
+    - [Microsoft Azure](transcription.configuration/microsoftazure.md)
     - [Vosk](transcription.configuration/vosk.md)
     - [Whisper](transcription.configuration/whisper.md)
 - [User Statistics and Privacy Configuration](user-statistics.and.privacy.md)
