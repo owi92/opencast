@@ -20,9 +20,9 @@ Parameter Table
 |--------------------------|----------|------------------|-------------
 | source-flavor            | yes      | presenter/source | The source media package to use
 | target-flavor            | yes      | archive          | Flavor of the produced subtitle
-| target-tags              | no       | captions/source  | Tags for the subtitle file².
+| target-tags              | no       | captions/source  | Tags applies to the resulting subtitle element²³.
 | target-element           | no       | track            | Define where to append the subtitles file. Possibilities are: as a 'track' or as an 'attachment' (default: `track`).
-| language-code            | no       | de               | The language of the video or audio source³.
+| language-code            | no       | de               | The language of the video or audio source⁴.
 | language-fallback        | no¹      | en               | Optional fallback value if the dublin core/media package language field is not set.
 | translate                | no       | true             | Transcription is translated into English, valid values `true` or `false` (Whisper/WhisperC++ only)
 | limit-to-one             | no       | true             | Limits the maximum of generated subtitles to one.
@@ -34,6 +34,7 @@ Parameter Table
 2. For conventionally used tags see the general page on [Subtitles](../configuration/subtitles.md). The `generator`
    and `generator-type` tags will be set automatically. For Whisper, iIf no `language-code` is set, the `lang` tag will
    be auto-generated.
+3. This has no effect if the transcription is run asynchronously. It only applies to attached in this operation.
 3. Vosk only: It has to match the name of the language model directory. See 'vosk-cli'.
 
 Requirements
