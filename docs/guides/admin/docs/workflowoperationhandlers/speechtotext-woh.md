@@ -23,7 +23,7 @@ Parameter Table
 | target-tags              | no       | captions/source  | Tags for the subtitle file².
 | target-element           | no       | track            | Define where to append the subtitles file. Possibilities are: as a 'track' or as an 'attachment' (default: `track`).
 | language-code            | no       | de               | The language of the video or audio source³.
-| language-fallback        | no¹      | en               | The fallback value if the dublin core/media package language field is not present (default: `en`).
+| language-fallback        | no¹      | en               | Optional fallback value if the dublin core/media package language field is not set.
 | translate                | no       | true             | Transcription is translated into English, valid values `true` or `false` (Whisper/WhisperC++ only)
 | limit-to-one             | no       | true             | Limits the maximum of generated subtitles to one.
 | track-selection-strategy | no       | everything       | Define what tracks shall be selected for subtitle generation if used together with `limit-to-one` (default: `everything`).

@@ -488,8 +488,8 @@ public class
     }
 
     if (language.isEmpty()) {
-      // If nothing helps, use the fallback language
-      language = Objects.toString(operation.getConfiguration(LANGUAGE_FALLBACK), "en");
+      // Use the fallback language if the operation configuration defines one
+      language = Objects.toString(operation.getConfiguration(LANGUAGE_FALLBACK), "");
     }
 
     return language;
