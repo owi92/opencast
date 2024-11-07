@@ -9,6 +9,28 @@ The following list contains a list of passed proposals for reference.
 Passed Proposals
 ----------------
 
+### Move #Proposals to PRs
+Proposed by Greg Logan <gregorydlogan@gmail.com>, passed on Nov 11, 2024
+```no-highlight
+Hi all,
+
+As we have previously discussed moving the majority of our communication to
+Matrix, and GitHub, I hereby #propose that we move these email-based proposals
+and make them PRs instead.  This prevents us from forgetting about proposals.
+The PR I'm filing as part of this actually contains a passed proposal that was
+forgetten somewhere :)
+
+The downside to this is that it binds the proposals to our weekly technical
+meeting's PR review, but I don't see this as an issue.  And, if you want to get
+*really* rule-lawyery, proposals only change documentation so there's no actual
+requirement to review them prior to merge...
+
+Proposal passes Nov 11, or whenever the relevant PR is merged
+
+G
+```
+
+
 ### Rules for adding patches to legacy
 Proposed by Lars Kiesow <lkiesow@uos.de>, passed on Oct 11, 2024
 ```no-highlight
