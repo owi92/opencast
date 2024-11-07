@@ -9,6 +9,46 @@ The following list contains a list of passed proposals for reference.
 Passed Proposals
 ----------------
 
+### Rules for adding patches to legacy
+Proposed by Lars Kiesow <lkiesow@uos.de>, passed on Oct 11, 2024
+```no-highlight
+Hi everyone,
+at the DACH meeting we had a longer discussion about making updates
+easier where we concluded that no participant is trusting Opencast to
+not break stuff. Even with a minor update.
+
+Discussing how we could maybe improve the situation we came up with two
+suggested changes to the development process. Both are specifically
+adressing patches to the legacy branch (the second newest release
+branch; r/15.x right now):
+
+- We strongly recommend to not add new features to the legacy branch.
+  Even bug fixes should only be added if the bugs pose a significant
+  problem to the overall community.
+
+- If a developer wants to add a patch to the legacy branch, the patch
+  (pull request) must come with an explanation why it needs to be
+  merged in legacy and cannot just go into stable or develop.
+
+This means that the rules for stable do not change and developers and
+adopters still have about 7 month before the rules apply to a given
+release branch. We hope that the most important bugs are found until
+then.
+
+It also means that developers still can add the same patches they can
+add now. But they need to actually think about why they need to go into
+legacy and about what risks are involved.
+
+We hope this helps making at least the legacy version of Opencast more
+stable, which in turn makes updates between minor versions easier.
+
+If no one objects, this proposal will pass on
+Fri Oct 11 02:42 PM CEST 2024
+
+All the best,
+Lars
+```
+
 ### Allow merges of admin interface and editor
 Proposed by Lars Kiesow <lkiesow@uos.de>, passed on Jun 21, 2024
 ```no-highlight
