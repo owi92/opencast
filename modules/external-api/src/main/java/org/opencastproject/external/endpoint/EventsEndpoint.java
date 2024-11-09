@@ -64,6 +64,7 @@ import org.opencastproject.index.service.util.RequestUtils;
 import org.opencastproject.index.service.util.RestUtils;
 import org.opencastproject.ingest.api.IngestException;
 import org.opencastproject.ingest.api.IngestService;
+import org.opencastproject.list.impl.EmptyResourceListQuery;
 import org.opencastproject.mediapackage.Attachment;
 import org.opencastproject.mediapackage.AudioStream;
 import org.opencastproject.mediapackage.Catalog;
@@ -162,6 +163,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -256,7 +259,8 @@ public class EventsEndpoint implements ManagedService {
   private IndexService indexService;
   private IngestService ingestService;
   private SecurityService securityService;
-  private final List<EventCatalogUIAdapter> catalogUIAdapters = new ArrayList<>();
+  private final List<EventCatalogUIAdapter> catalogUIAdapters = new CopyOnWriteArrayList<>();
+  private final Map<String, List<EventCatalogUIAdapter>> orgCatalogUIAdaptersMap = new ConcurrentHashMap<>();
   private UrlSigningService urlSigningService;
   private SchedulerService schedulerService;
   private CaptureAgentStateService agentStateService;
@@ -319,11 +323,27 @@ public class EventsEndpoint implements ManagedService {
   )
   public void addCatalogUIAdapter(EventCatalogUIAdapter catalogUIAdapter) {
     catalogUIAdapters.add(catalogUIAdapter);
+    invalidateOrgCatalogUIAdaptersMapFor(catalogUIAdapter);
   }
 
   /** OSGi DI. */
   public void removeCatalogUIAdapter(EventCatalogUIAdapter catalogUIAdapter) {
     catalogUIAdapters.remove(catalogUIAdapter);
+    invalidateOrgCatalogUIAdaptersMapFor(catalogUIAdapter);
+  }
+
+  /**
+   * Invalidates caches for organizations that are handled by given catalog.
+   *
+   * @param catalogUIAdapter catalog used to identify affected organizations.
+   */
+  private void invalidateOrgCatalogUIAdaptersMapFor(EventCatalogUIAdapter catalogUIAdapter) {
+    // clean cached org to catalog map
+    for (String orgName : orgCatalogUIAdaptersMap.keySet()) {
+      if (catalogUIAdapter.handlesOrganization(orgName)) {
+        orgCatalogUIAdaptersMap.remove(orgName);
+      }
+    }
   }
 
   /** OSGi DI */
@@ -345,17 +365,16 @@ public class EventsEndpoint implements ManagedService {
 
 
   private List<EventCatalogUIAdapter> getEventCatalogUIAdapters() {
-    return new ArrayList<>(getEventCatalogUIAdapters(getSecurityService().getOrganization().getId()));
+    return getEventCatalogUIAdapters(getSecurityService().getOrganization().getId());
   }
 
   public List<EventCatalogUIAdapter> getEventCatalogUIAdapters(String organization) {
-    List<EventCatalogUIAdapter> adapters = new ArrayList<>();
-    for (EventCatalogUIAdapter adapter : catalogUIAdapters) {
-      if (adapter.handlesOrganization(organization)) {
-        adapters.add(adapter);
-      }
-    }
-    return adapters;
+    List<EventCatalogUIAdapter> cachedCatalogUIAdapters = orgCatalogUIAdaptersMap.computeIfAbsent(organization,
+        org -> new ArrayList<>(catalogUIAdapters.stream()
+            .filter(a -> a.handlesOrganization(org))
+            .collect(Collectors.toList())));
+    // create a shallow copy as callers may change it
+    return new ArrayList<>(cachedCatalogUIAdapters);
   }
 
   /** OSGi activation method */
@@ -1382,16 +1401,19 @@ public class EventsEndpoint implements ManagedService {
     List<EventCatalogUIAdapter> catalogUIAdapters = getEventCatalogUIAdapters();
     EventCatalogUIAdapter eventCatalogUIAdapter = indexService.getCommonEventCatalogUIAdapter();
     catalogUIAdapters.remove(eventCatalogUIAdapter);
-    MediaPackage mediaPackage = indexService.getEventMediapackage(event);
     if (catalogUIAdapters.size() > 0) {
+      MediaPackage mediaPackage = indexService.getEventMediapackage(event);
       for (EventCatalogUIAdapter catalogUIAdapter : catalogUIAdapters) {
         // TODO: This is very slow:
         DublinCoreMetadataCollection fields = catalogUIAdapter.getFields(mediaPackage);
-        if (fields != null) metadataList.add(catalogUIAdapter, fields);
+        if (fields != null) {
+          ExternalMetadataUtils.removeCollectionList(fields);
+          metadataList.add(catalogUIAdapter, fields);
+        }
       }
     }
-    // TODO: This is slow:
-    DublinCoreMetadataCollection collection = EventUtils.getEventMetadata(event, eventCatalogUIAdapter);
+    DublinCoreMetadataCollection collection = EventUtils.getEventMetadata(event, eventCatalogUIAdapter,
+        new EmptyResourceListQuery());
     ExternalMetadataUtils.changeSubjectToSubjects(collection);
     ExternalMetadataUtils.removeCollectionList(collection);
     metadataList.add(eventCatalogUIAdapter, collection);
@@ -1420,7 +1442,8 @@ public class EventsEndpoint implements ManagedService {
       // Try the main catalog first as we load it from the index.
       EventCatalogUIAdapter eventCatalogUIAdapter = indexService.getCommonEventCatalogUIAdapter();
       if (flavor.get().equals(eventCatalogUIAdapter.getFlavor())) {
-        DublinCoreMetadataCollection collection = EventUtils.getEventMetadata(event, eventCatalogUIAdapter);
+        DublinCoreMetadataCollection collection = EventUtils.getEventMetadata(event, eventCatalogUIAdapter,
+            new EmptyResourceListQuery());
         ExternalMetadataUtils.changeSubjectToSubjects(collection);
         ExternalMetadataUtils.removeCollectionList(collection);
         convertStartDateTimeToApiV1(collection);
@@ -1429,8 +1452,8 @@ public class EventsEndpoint implements ManagedService {
       // Try the other catalogs
       List<EventCatalogUIAdapter> catalogUIAdapters = getEventCatalogUIAdapters();
       catalogUIAdapters.remove(eventCatalogUIAdapter);
-      MediaPackage mediaPackage = indexService.getEventMediapackage(event);
       if (catalogUIAdapters.size() > 0) {
+        MediaPackage mediaPackage = indexService.getEventMediapackage(event);
         for (EventCatalogUIAdapter catalogUIAdapter : catalogUIAdapters) {
           if (flavor.get().equals(catalogUIAdapter.getFlavor())) {
             DublinCoreMetadataCollection fields = catalogUIAdapter.getFields(mediaPackage);
@@ -1496,8 +1519,8 @@ public class EventsEndpoint implements ManagedService {
       // Try the other catalogs
       List<EventCatalogUIAdapter> catalogUIAdapters = getEventCatalogUIAdapters();
       catalogUIAdapters.remove(eventCatalogUIAdapter);
-      MediaPackage mediaPackage = indexService.getEventMediapackage(event);
       if (catalogUIAdapters.size() > 0) {
+        MediaPackage mediaPackage = indexService.getEventMediapackage(event);
         for (EventCatalogUIAdapter catalogUIAdapter : catalogUIAdapters) {
           if (flavor.get().equals(catalogUIAdapter.getFlavor())) {
             collection = catalogUIAdapter.getFields(mediaPackage);
