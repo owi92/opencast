@@ -52,5 +52,6 @@ jobs:
           then
             mkdir ${{ matrix.arch }}
             createrepo_c ${{ matrix.arch }}
-            s3cmd put -P --recursive noarch x86_64 s3://${S3PATH}/
+            cd ${{ matrix.arch }}
+            s3cmd put -P --recursive repodata s3://${S3PATH}/
           fi
