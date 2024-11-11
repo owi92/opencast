@@ -1,10 +1,10 @@
 <!--
-If your pull request is targeting the legacy (second oldest release branch), explain why this patch is so important that
-it needs to go into the legacy and can not go just into stable or develop.
+Explain what this pull request does.  If this fixes a bug, also explain how to reproduce the issue.
 -->
 
 <!--
-Explain what this pull request does.  If this fixes a bug, also explain how to reproduce the issue.
+If your pull request is targeting the legacy (second oldest release branch), explain why this patch is so important that
+it needs to go into the legacy and can not go just into stable or develop.
 -->
 
 ### How to test this patch
