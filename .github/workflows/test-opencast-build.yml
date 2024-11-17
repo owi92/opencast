@@ -233,3 +233,4 @@ jobs:
         with:
           name: opencast-allinone
           path: build/opencast-dist-allinone/
+          overwrite: true
