@@ -74,11 +74,6 @@ accomplished by running the following:
 
     apt-get install opensearch
 
-Furthermore, the `analysis-icu` plugin for OpenSearch is required to install. It is necessary for sorting naturally.
-To install the ICU plugin, run the following:
-
-    bin/opensearch-plugin install analysis-icu
-
 If you wish to use the upstream OpenSearch repository directly be aware that Opencast only supported with OpenSearch 1.x
 and will not work with OpenSearch 2.x yet.  Future support for this is forthcoming.
 
@@ -87,15 +82,12 @@ and will not work with OpenSearch 2.x yet.  Future support for this is forthcomi
 Configure OpenSearch
 --------------------
 
-After installing OpenSearch please make sure to follow their
-[configuration documentation](https://opensearch.org/docs/1.3/install-and-configure/install-opensearch/debian/)
-to ensure that your OpenSearch instance is set up correctly and securely.  Once that setup is complete, ensure that
-your Opencast install matches your configured OpenSearch settings.  Notably, Opencast's current default assumes
-non-secured http rather than https, without a username and password.  Read the
-[Opencast OpenSearch Documentation](../configuration/searchindex/elasticsearch.md) to correctly configure Opencast's connection
-once Opencast has been installed below.
+After installing OpenSearch please make sure to install all necessary plugins and update the configuration.
+For details, please follow:
 
-After installing and configuring make sure to start and enable OpenSearch:
+- [Opencast OpenSearch Documentation](../configuration/searchindex/elasticsearch.md)
+
+When the configuration is done, start and enable OpenSearch:
 
 ```sh
 systemctl restart opensearch

@@ -60,35 +60,29 @@ This will install the default distribution of Opencast and all its dependencies.
 For more options, see the [advanced installation section below](#advanced-installation).
 
 
-Install Elasticsearch
----------------------
+Install OpenSearch
+------------------
 
-Opencast uses Elasticsearch as a search index and a cache for quick access to some data from user interfaces.
-Make sure to install it on the node which also serves the admin interface.
+Opencast uses OpenSearch as a search index and a cache for quick access to some data from user interfaces.
+Opencast requires OpenSearch 1.x. Version 2.x will not work.
+It also requires `analysis-icu` plugin.
+The repository provides both:
 
 ```sh
-dnf install elasticsearch-oss
+dnf install opensearch opensearch-plugin-analysis-icu
 ```
 
-Furthermore, the `analysis-icu` plugin for Elasticsearch is required to install. It is necessary for sorting naturally.
-To install the ICU plugin, run the following:
+After installing OpenSearch please make sure to install all necessary plugins and update the configuration.
+For details, please follow:
 
-    bin/elasticsearch-plugin install analysis-icu
+- [Opencast OpenSearch Documentation](../configuration/searchindex/elasticsearch.md)
 
-Opencast automatically configures the search index once it is connected.
-The default configuration will work for a local Elasticsearch with no modifications.
-The only exception for this is to add a configuration to mitigate Log4Shell.
-For this, add a file `/etc/elasticsearch/jvm.options.d/log4shell.options` with the content:
-
-```
--Dlog4j2.formatMsgNoLookups=true
-```
 
 Finally, make sure to start and enable the service:
 
 ```sh
-systemctl start elasticsearch
-systemctl enable elasticsearch
+systemctl start opensearch
+systemctl enable opensearch
 ```
 
 
