@@ -1,5 +1,12 @@
 # Opencast 15: Release Notes
 
+## Opencast 15.12
+
+This is the last release of Opencast 15.x.
+
+It includes a bug fix related to the publication of subtitles for events without branding [[#6156](https://github.com/opencast/opencast/pull/6156)].
+The bug was introduced in Opencast 15.8.
+
 ## Opencast 15.11
 
 This release includes a bug fix for the Tobira API ([[#6157](https://github.com/opencast/opencast/pull/6157)]).
