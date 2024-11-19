@@ -478,6 +478,15 @@ Opencast 16
 Opencast 15
 -----------
 
+### Opencast 15.12
+
+- [[#6296](https://github.com/opencast/opencast/pull/6296)] -
+  Upgrade upload-artifacts from v3 to v4
+- [[#6256](https://github.com/opencast/opencast/pull/6256)] -
+  Refix the CLA check
+- [[#6156](https://github.com/opencast/opencast/pull/6156)] -
+  Fix non-themed subtitle publications
+
 ### Opencast 15.11
 
 - [[#6238](https://github.com/opencast/opencast/pull/6238)] -
