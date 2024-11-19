@@ -1145,7 +1145,7 @@ public Response getSeriesHostPages(@PathParam("seriesId") String seriesId) {
           restParameters = {
                   @RestParameter(
                           name = "pathComponents",
-                          isRequired = true,
+                          isRequired = false,
                           description = "List of realms with name and path segment on path to series.",
                           type = TEXT),
                   @RestParameter(
@@ -1155,7 +1155,7 @@ public Response getSeriesHostPages(@PathParam("seriesId") String seriesId) {
                           type = STRING),
                   @RestParameter(
                           name = "targetPath",
-                          isRequired = true,
+                          isRequired = false,
                           description = "Path where the series will be mounted.",
                           type = STRING) },
           responses = {
@@ -1174,10 +1174,6 @@ public Response getSeriesHostPages(@PathParam("seriesId") String seriesId) {
     @FormParam("currentPath") String currentPath,
     @FormParam("targetPath") String targetPath
   ) throws IOException, InterruptedException {
-    if (targetPath == null) {
-      throw new WebApplicationException("target path is missing", BAD_REQUEST);
-    }
-
     var tobira = getTobira();
     if (!tobira.ready()) {
       return Response.status(Status.SERVICE_UNAVAILABLE)
@@ -1186,16 +1182,20 @@ public Response getSeriesHostPages(@PathParam("seriesId") String seriesId) {
     }
 
     try {
-      var paths = (List<JSONObject>) new JSONParser().parse(pathComponents);
+      if (pathComponents != null && !pathComponents.trim().isEmpty()) {
+        var paths = (List<JSONObject>) new JSONParser().parse(pathComponents);
+        tobira.createRealmLineage(paths);
+      }
 
-      var mountParams = new JSONObject();
-      mountParams.put("seriesId", seriesId);
-      mountParams.put("targetPath", targetPath);
+      if (targetPath != null && !targetPath.trim().isEmpty()) {
+        var mountParams = new JSONObject();
+        mountParams.put("seriesId", seriesId);
+        mountParams.put("targetPath", targetPath);
+        tobira.addSeriesMountPoint(mountParams);
+      }
 
-      tobira.createRealmLineage(paths);
-      tobira.addSeriesMountPoint(mountParams);
 
-      if (currentPath != null) {
+      if (currentPath != null && !currentPath.trim().isEmpty()) {
         var unmountParams = new JSONObject();
         unmountParams.put("seriesId", seriesId);
         unmountParams.put("currentPath", currentPath);
