@@ -307,26 +307,26 @@ needs to be done manually.
 
 The following steps outline the necessary steps for cutting the final release:
 
-1. Switch to and update your release branch and ensure the latest state of the previous release branch is merged:
+0. Switch to and update your local release branch.
 
-        git checkout r/6.x
-        git fetch <remote>
-        git merge <remote>/r/6.x
-        git merge <remote>/r/5.x
-
-2. Add the release notes, and update the changelog. The `create-changelog` [helper script
+1. Add the release notes, and update the changelog. The `create-changelog` [helper script
    ](https://github.com/opencast/helper-scripts/tree/master/release-management/create-changelog) is a convenient tool
-   for this.
+   for this. You need to update:
 
-        cd docs/guides/admin/docs/
-        vim releasenotes.md
-        vim changelog.md
-        git commit -S releasenotes.md changelog.md -m 'Updated Release Notes'
-        git push <remote> r/6.x
+   - `docs/guides/admin/docs/releasenotes.md`
+   - `docs/guides/admin/docs/changelog.md`
+
+   Create a pull request for the updated documentation and merge it.
+
+2. Update your local release branch yet again, so that it contains the documentation:
+
+        git checkout r/16.x
+        git fetch <remote>
+        git merge <remote>/r/16.x
 
 3. Switch to a new branch to create the release (name does not really matter):
 
-        git checkout -b tmp-6.0
+        git checkout -b tmp-16.0
 
 4. Make the version changes for the release:
 
@@ -335,17 +335,18 @@ The following steps outline the necessary steps for cutting the final release:
 5. Have a look at the changes. Make sure that nothing else was modified:
 
         git diff
-        git status | grep modified: | grep -v pom.xml   # this should yield no output
+        # The following command should yield no output:
+        git status | grep modified: | grep -v pom.xml
 
 6. Commit the changes and create a release tag:
 
         git add $(git status | grep 'modified:.*pom.xml' | awk '{print $2;}')
-        git commit -S -m 'Opencast 6.0'
-        git tag -s 6.0
+        git commit -S -m 'Opencast 16.0'
+        git tag -s 16.0 -m 'Opencast 16.0'
 
 7. Push the tag to the community repository (you can remove the branch afterwards):
 
-        git push <remote> 6.0:6.0
+        git push <remote> 16.0
 
 8. Check the “Create new release” GitHub Actions workflow.
    It will automatically build and upload the release tarballs and create a new release draft.
@@ -354,37 +355,11 @@ The following steps outline the necessary steps for cutting the final release:
    If the workflow fails, investigate what was going wrong and either restart the workflow or create the release
    manually in the GitHub user interface.
 
-9. Check that the release is published on [Maven Central](https://repo1.maven.org/maven2/org/opencastproject/opencast-common/).
+9. Post a release notification on [opencast.org](https://opencast.org).
+
+10. Check that the release is published on [Maven Central](https://repo1.maven.org/maven2/org/opencastproject/opencast-common/).
     This can take some time, and is done via [Buildbot](http://ci.opencast.org).  If in doubt, ask the QA Coordinator to
     check.  If you need to do this yourself please read the [infra documentation](infrastructure/maven-repository.md#pushing-to-maven-central).
-
-Finally, send a release notice to Opencast's announcement list. Note that posting to this list is restricted to those
-who need access to avoid general discussions on that list. In case you do not already have permissions to post on this
-list, please ask to be given permission. For the message, you may use the following template:
-
-```no-highlight
-To: announcements@opencast.org
-Subject: Opencast <VERSION> Released
-
-Hi everyone,
-it is my pleasure to announce that Opencast <VERSION> has
-been released:
-
-  https://github.com/opencast/opencast/releases
-
-The documentation for this release can be found at:
-
-  https://docs.opencast.org/r/<VERSION>/admin/
-
-RPM and Debian packages as well as Docker images will be
-available soon. Watch for announcements on the users list.
-
-To all committers and involved contributors, thank you for
-all your work. This could not have happened without you and
-I am glad we were able to work together and get this release
-out.
-```
-
 
 ### Appointment of Next Release Manager
 
