@@ -66,7 +66,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.function.Function;
 
@@ -860,27 +859,5 @@ public class ElasticsearchIndex extends AbstractElasticsearchIndex {
     } catch (Throwable t) {
       throw new SearchIndexException("Error querying theme index", t);
     }
-  }
-
-  /**
-   * Escapes all reserved Elasticsearch characters in a given string
-   * Useful for when a given query string does not know about Elasticsearch query syntax
-   * @param text String to escape reserved characters in
-   * @return the given string with escaped characters
-   */
-  public String escapeQuery(String text) {
-    Set<Character> specialChars = Set.of('\\', '+', '-', '!', '(', ')', ':', '^', '[', ']', '\"', '{', '}', '~', '*',
-            '?', '|', '&', '/');
-
-    StringBuilder sb = new StringBuilder(text.length());
-
-    for (char c : text.toCharArray()) {
-      if (specialChars.contains(c)) {
-        sb.append('\\');
-      }
-      sb.append(c);
-    }
-
-    return sb.toString();
   }
 }
