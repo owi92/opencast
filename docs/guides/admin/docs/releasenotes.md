@@ -1,5 +1,17 @@
 # Opencast 16: Release Notes
 
+## Opencast 16.7
+
+Opencast 16.7 is a security and maintenance release.
+
+The release contains a major bugfix release of the admin interface.
+For specific details, please refer to the [release notes of
+the Admin Interface release 2024-11-19](https://github.com/opencast/opencast-admin-interface/releases/tag/2024-11-19).
+
+It also fixes [a security vulnerability](https://github.com/opencast/opencast/security/advisories/GHSA-jh6x-7xfg-9cq2)
+(CVE-2024-52797) with moderate severity, which may be exploitable for a denial of service attack.
+We recommend upgrading to this release.
+
 ## Opencast 16.6
 
 This is a maintenance release of Opencast 16. It fixes several minor bugs.
