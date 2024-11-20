@@ -4,6 +4,39 @@ Changelog
 Opencast 16
 -----------
 
+### Opencast 16.7
+
+- [[GHSA-jh6x-7xfg-9cq2](https://github.com/opencast/opencast/security/advisories/GHSA-jh6x-7xfg-9cq2) -
+  Searching Opencast may cause a denial of service (CVE-2024-52797)
+- [[#6315](https://github.com/opencast/opencast/pull/6315)] -
+  Update to admin interface release 2024-11-19
+- [[#6314](https://github.com/opencast/opencast/pull/6314)] -
+  Link webinar about upgrading Opencast via RPM
+- [[#6313](https://github.com/opencast/opencast/pull/6313)] -
+  Remove incorrect JDK support statement
+- [[#6305](https://github.com/opencast/opencast/pull/6305)] -
+  No opencast-plugin-paella-player-6 as install-feature
+- [[#6302](https://github.com/opencast/opencast/pull/6302)] -
+  Fix scrollbar overlaying code in docs
+- [[#6299](https://github.com/opencast/opencast/pull/6299)] -
+  Don't run attach transcription if AmberScript transcription failed
+- [[#6292](https://github.com/opencast/opencast/pull/6292)] -
+  Fix default session timeout
+- [[#6262](https://github.com/opencast/opencast/pull/6262)] -
+  Fix Amberscript Transcription Jobs Hanging
+- [[#6255](https://github.com/opencast/opencast/pull/6255)] -
+  Fix NPE when MP element can't be found in local asset manager store
+- [[#6254](https://github.com/opencast/opencast/pull/6254)] -
+  Lower log level for filter parsing errors
+- [[#6251](https://github.com/opencast/opencast/pull/6251)] -
+  Improve event catalog handling in External API
+- [[#6250](https://github.com/opencast/opencast/pull/6250)] -
+  Fix stale JWK provider cache when using kid
+- [[#6244](https://github.com/opencast/opencast/pull/6244)] -
+  Update Editor to Release 2024-10-16
+- [[#6111](https://github.com/opencast/opencast/pull/6111)] -
+  Treat `filter` parameter elements in admin UI APIs as URL encoded
+
 ### Opencast 16.6
 
 - [[#6232](https://github.com/opencast/opencast/pull/6232)] -
