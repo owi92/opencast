@@ -38,11 +38,11 @@ import static org.opencastproject.index.service.util.RestUtils.okJson;
 import static org.opencastproject.index.service.util.RestUtils.okJsonList;
 import static org.opencastproject.util.doc.rest.RestParameter.Type.STRING;
 
-import org.opencastproject.adminui.util.QueryPreprocessor;
 import org.opencastproject.elasticsearch.api.SearchIndexException;
 import org.opencastproject.elasticsearch.api.SearchResult;
 import org.opencastproject.elasticsearch.api.SearchResultItem;
 import org.opencastproject.elasticsearch.index.ElasticsearchIndex;
+import org.opencastproject.elasticsearch.index.QueryPreprocessor;
 import org.opencastproject.elasticsearch.index.objects.series.Series;
 import org.opencastproject.elasticsearch.index.objects.series.SeriesSearchQuery;
 import org.opencastproject.elasticsearch.index.objects.theme.IndexTheme;
