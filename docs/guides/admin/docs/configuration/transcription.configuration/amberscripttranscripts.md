@@ -70,7 +70,7 @@ operations:
     - language: de
     - jobtype: direct
     - skip-if-flavor-exists: captions/vtt
-
+```
 </details>
 
 <details>
@@ -107,7 +107,7 @@ operations:
     - language: de
     - jobtype: direct
     - skip-if-flavor-exists: captions/vtt
-
+```
 </details>
 
 ### Step 4: Include workflow operations into your workflow
