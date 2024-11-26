@@ -36,10 +36,9 @@ the fix is finalized.  Don't stress about being perfect, all fields here are edi
 
 ### The Security Advisory
 
-Once created, the draft security advisory remains private to repository owners only - which excludes the committer
-group!  Make sure to add the `Committers` user group as Collaborator on the issue.  Now may also be a good time to add
-the reporter's GitHub account as a collaborator as well, provided the sensitivity of the issue allows this.  To
-finalize the release of a security advisory you will need to request a CVE ID.  This is done *after* finalizing the
+Once created, the draft security advisory remains private to repository owners and committers.  Now may also be a good
+time to add the reporter's GitHub account as a collaborator as well, provided the sensitivity of the issue allows this.
+To finalize the release of a security advisory you will need to request a CVE ID.  This is done *after* finalizing the
 title, body, and CVE score using the calculator.  The request may require a few days on GitHub's side, so do not leave
 this to the last minute, but also do not do it first since some security issues may become more (or less) complex as
 you dig into them, or the upstream codebase changes.  If you need help, or want a second set of eyes don't hesitate
