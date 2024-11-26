@@ -374,10 +374,7 @@ on.
 
 #### Security Issues
 
-If you discover a problem that has severe implications for system security, please do not publish this information on
-list. Instead, send a report of the problem to *security@opencast.org*. The message will be forwarded to the private
-committers list, where the issue will be discussed. Once a patch for the problem is ready, a security notice will be
-released along with it.
+Details of how our security issues are handled can be found [here](security-issues.md)
 
 ### Unit Tests
 
