@@ -9,6 +9,88 @@ The following list contains a list of passed proposals for reference.
 Passed Proposals
 ----------------
 
+### Require 2FA for all committers
+Proposed by Daniel Ziegenberg <daniel@ziegenberg.at>, passed on Nov 29, 2024
+```no-highlight
+Hi all,
+
+In 2022, GitHub wrote a blog post titled "Software security starts with the
+developer: Securing developer accounts with 2FA" about requiring all users who
+contribute code on GitHub.com to enable one or more forms of two-factor
+authentication (2FA) in the future[1].
+
+They justified it with the following reason:
+
+> Most security breaches are not the product of exotic zero-day attacks, but
+> rather involve lower-cost attacks like social engineering, credential theft
+> or leakage, and other avenues that provide attackers with a broad range of
+> access to victim accounts and the resources they have access to. Compromised
+> accounts can be used to steal private code or push malicious changes to that
+> code. This places not only the individuals and organizations associated with
+> the compromised accounts at risk, but also any users of the affected code.
+> The potential for downstream impact to the broader software ecosystem and
+> supply chain as a result is substantial.
+
+In 2023 GitHub presented a timeline for the implementation of this policy[2] and
+wrote another blog post about a dramatically increased 2FA adoption on GitHub in
+2024[3]. At GitHub they have "seen an opt-in rate of nearly 95% across code
+contributors who received the 2FA requirement in 2023". Their current policy
+lists several key actions on GitHub that shows someone is a contributor and
+therefore eligible for the 2FA requirement[4].
+
+This enrollment criteria contains the following points:
+
+
+- Publishing an app or action for others
+- Creating a release for your repository
+- Contributing to specific high-importance repositories, such as the projects
+  tracked by the Open Source Security Foundation
+- Being an administrator or a contributor of a high-importance repository
+- Being an organization owner for an organization containing repositories or
+  other users
+- Being an administrator or a contributor for repositories that published one
+  or more packages
+- Being an enterprise administrator
+
+Additionally GitHub now offers enhanced 2FA management for orgs and
+enterprises[5]:
+
+> Enterprises can enable this new 2FA policy alongside a general 2FA requirement
+> for their members, and current enterprises with a 2FA requirement can update
+> their 2FA settings to add this secure methods enforcement. Members who are
+> non-compliant with the new 2FA policy will no longer be removed from
+> organizations, lessening a historical friction around enforcing 2FA policies
+> at an enterprise or organization level, and instead be prevented from
+> accessing enterprise or organization resources while non-compliant.
+
+GitHub offers detailed documentation on how to start requiring two-factor
+authentication in an organization[6].
+
+
+In conclusion, I hereby #propose that all committers are required to enable
+(2FA) for their GitHub account. This is a security measure to protect the
+Opencast project from unauthorized access to the repositories and other
+ressources. GitHub has shown that this is a feasible requirement and that it can
+be implemented without major issues.
+
+
+Proposal passes Nov 29, or whenever the relevant PR is merged.
+
+
+Greetings,
+Daniel
+
+
+1: https://github.blog/news-insights/company-news/software-security-starts-with-the-developer-securing-developer-accounts-with-2fa/
+2: https://github.blog/news-insights/product-news/raising-the-bar-for-software-security-github-2fa-begins-march-13/
+3: https://github.blog/security/supply-chain-security/securing-millions-of-developers-through-2fa/
+4: https://docs.github.com/en/authentication/securing-your-account-with-two-factor-authentication-2fa/about-mandatory-two-factor-authentication
+5: https://github.blog/changelog/2024-11-21-enhanced-2fa-management-for-orgs-and-enterprises-public-preview/
+6: https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/requiring-two-factor-authentication-in-your-organization
+
+```
+
+
 ### Move #Proposals to PRs
 Proposed by Greg Logan <gregorydlogan@gmail.com>, passed on Nov 11, 2024
 ```no-highlight
