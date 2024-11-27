@@ -242,7 +242,7 @@ class TranslatedSeries extends React.Component<SeriesProps, SeriesState> {
             const headingOpts = {
                 range: {
                     begin: Math.min(sr.offset + 1, sr.total),
-                    end: sr.offset + sr.limit
+                    end: Math.min(sr.offset + sr.limit, sr.total)
                 },
                 total: sr.total
             };
