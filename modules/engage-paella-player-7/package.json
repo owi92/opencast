@@ -25,7 +25,7 @@
     "eslint-config-opencast": "file:../../docs/checkstyle/eslint-config",
     "express": "^4.21.1",
     "html-linter": "^1.1.1",
-    "html-validate": "^8.24.2",
+    "html-validate": "^8.27.0",
     "http-proxy": "^1.18.1",
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
