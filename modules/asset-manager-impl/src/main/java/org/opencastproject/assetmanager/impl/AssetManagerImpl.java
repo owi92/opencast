@@ -1226,7 +1226,7 @@ public class AssetManagerImpl extends AbstractIndexProducer implements AssetMana
       // find asset in versions & stores
       final Optional<StoragePath> existingAssetOpt =
           getDatabase()
-          .findAssetByChecksumAndStore(e.getChecksum().toString(), store.getStoreType())
+          .findAssetByChecksumAndStoreAndOrg(e.getChecksum().toString(), store.getStoreType(), orgId)
           .map(dto -> StoragePath.mk(
               dto.getOrganizationId(),
               dto.getMediaPackageId(),
@@ -1413,7 +1413,7 @@ public class AssetManagerImpl extends AbstractIndexProducer implements AssetMana
       final StoragePath storagePath = StoragePath.mk(orgId, mpId, version, e.getIdentifier());
       // find asset in versions
       final Optional<StoragePath> existingAssetOpt = getDatabase()
-          .findAssetByChecksumAndStore(e.getChecksum().toString(), getLocalAssetStore().getStoreType())
+          .findAssetByChecksumAndStoreAndOrg(e.getChecksum().toString(), getLocalAssetStore().getStoreType(), orgId)
           .map(dto -> StoragePath.mk(
                   dto.getOrganizationId(),
                   dto.getMediaPackageId(),
