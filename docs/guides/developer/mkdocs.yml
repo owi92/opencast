@@ -92,6 +92,8 @@ nav:
       - Workflow API: 'architecture/api/workflow-api.md'
       - Data Types: 'architecture/api/types.md'
       - Glossary: 'architecture/api/glossary.md'
+   - GraphQL API:
+      - Introduction: 'architecture/graphql/index.md'
    - Filesystem: 'architecture/filesystem.md'
    - Job dispatch: 'architecture/job-dispatch.md'
    - OAI-PMH: 'architecture/oaipmh.md'
