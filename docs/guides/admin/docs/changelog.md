@@ -371,6 +371,7 @@ Opencast 17
 <li>[<a href="https://github.com/opencast/opencast/pull/5629">5629</a>] -
   Bump org.apache.santuario:xmlsec from 2.2.6 to 4.0.2 in /modules/db</li>
 </ul>
+</details>
 
 Opencast 16
 -----------
