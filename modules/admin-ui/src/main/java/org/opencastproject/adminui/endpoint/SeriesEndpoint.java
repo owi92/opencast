@@ -1145,7 +1145,7 @@ public Response getSeriesHostPages(@PathParam("seriesId") String seriesId) {
           restParameters = {
                   @RestParameter(
                           name = "pathComponents",
-                          isRequired = false,
+                          isRequired = true,
                           description = "List of realms with name and path segment on path to series.",
                           type = TEXT),
                   @RestParameter(
@@ -1155,7 +1155,7 @@ public Response getSeriesHostPages(@PathParam("seriesId") String seriesId) {
                           type = STRING),
                   @RestParameter(
                           name = "targetPath",
-                          isRequired = false,
+                          isRequired = true,
                           description = "Path where the series will be mounted.",
                           type = STRING) },
           responses = {
@@ -1174,6 +1174,10 @@ public Response getSeriesHostPages(@PathParam("seriesId") String seriesId) {
     @FormParam("currentPath") String currentPath,
     @FormParam("targetPath") String targetPath
   ) throws IOException, InterruptedException {
+    if (targetPath == null) {
+      throw new WebApplicationException("target path is missing", BAD_REQUEST);
+    }
+
     var tobira = getTobira();
     if (!tobira.ready()) {
       return Response.status(Status.SERVICE_UNAVAILABLE)
@@ -1182,19 +1186,69 @@ public Response getSeriesHostPages(@PathParam("seriesId") String seriesId) {
     }
 
     try {
-      if (pathComponents != null && !pathComponents.trim().isEmpty()) {
-        var paths = (List<JSONObject>) new JSONParser().parse(pathComponents);
-        tobira.createRealmLineage(paths);
+      var paths = (List<JSONObject>) new JSONParser().parse(pathComponents);
+
+      var mountParams = new JSONObject();
+      mountParams.put("seriesId", seriesId);
+      mountParams.put("targetPath", targetPath);
+
+      tobira.createRealmLineage(paths);
+      tobira.addSeriesMountPoint(mountParams);
+
+      if (currentPath != null && !currentPath.trim().isEmpty()) {
+        var unmountParams = new JSONObject();
+        unmountParams.put("seriesId", seriesId);
+        unmountParams.put("currentPath", currentPath);
+        tobira.removeSeriesMountPoint(unmountParams);
       }
 
-      if (targetPath != null && !targetPath.trim().isEmpty()) {
-        var mountParams = new JSONObject();
-        mountParams.put("seriesId", seriesId);
-        mountParams.put("targetPath", targetPath);
-        tobira.addSeriesMountPoint(mountParams);
-      }
+      return ok();
+    } catch (Exception e) {
+      return Response.status(Status.INTERNAL_SERVER_ERROR)
+              .entity("Internal server error: " + e.getMessage())
+              .build();
+    }
+  }
 
+  @DELETE
+  @Path("{seriesId}/tobira/{currentPath}")
+  @RestQuery(
+          name = "removeSeriesTobiraPath",
+          description = "Removes the path of the given series in a connected Tobira instance",
+          returnDescription = "Status code",
+          pathParameters = {
+                  @RestParameter(
+                          name = "seriesId",
+                          isRequired = true,
+                          description = "The series id",
+                          type = STRING),
+                  @RestParameter(
+                          name = "currentPath",
+                          isRequired = true,
+                          description = "URL encoded path where the series is currently mounted.",
+                          type = STRING) },
+          responses = {
+                  @RestResponse(
+                          responseCode = SC_OK,
+                          description = "The path of the series has successfully been removed in Tobira."),
+                  @RestResponse(
+                          responseCode = SC_NOT_FOUND,
+                          description = "Tobira doesn't know about the given series"),
+                  @RestResponse(
+                          responseCode = SC_SERVICE_UNAVAILABLE,
+                          description = "Tobira is not configured (correctly)") })
+  public Response removeSeriesTobiraPath(
+    @PathParam("seriesId") String seriesId,
+    @PathParam("currentPath") String currentPath
+  ) throws IOException, InterruptedException {
+    var tobira = getTobira();
+    if (!tobira.ready()) {
+      return Response.status(Status.SERVICE_UNAVAILABLE)
+              .entity("Tobira is not configured (correctly)")
+              .build();
+    }
 
+    try {
       if (currentPath != null && !currentPath.trim().isEmpty()) {
         var unmountParams = new JSONObject();
         unmountParams.put("seriesId", seriesId);
