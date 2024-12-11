@@ -543,7 +543,7 @@ public class EditorServiceImpl implements EditorService {
    *          the subtitles to be added
    * @throws IOException
    */
-  private MediaPackage addSubtitleTrack(MediaPackage mediaPackage, List<EditingData.Subtitle> subtitles)
+  private MediaPackage processSubtitleTrack(MediaPackage mediaPackage, List<EditingData.Subtitle> subtitles)
           throws IOException, IllegalArgumentException {
     for (EditingData.Subtitle subtitle : subtitles) {
       // Generate ID for new tracks
@@ -561,6 +561,14 @@ public class EditorServiceImpl implements EditorService {
       }
 
       Track track = mediaPackage.getTrack(trackId);
+
+      if (subtitle.isDeleted()) {
+        // If the subtitle is empty, remove the track
+        if (trackId != null) {
+          mediaPackage.remove(track);
+        }
+        continue;
+      }
 
       // Memorize uri of the previous track file for deletion
       URI oldTrackURI = null;
@@ -1130,7 +1138,7 @@ public class EditorServiceImpl implements EditorService {
 
     try {
       if (editingData.getSubtitles() != null) {
-        mediaPackage = addSubtitleTrack(mediaPackage, editingData.getSubtitles());
+        mediaPackage = processSubtitleTrack(mediaPackage, editingData.getSubtitles());
       }
     } catch (IOException e) {
       errorExit("Unable to add subtitle track to archive", mediaPackageId, ErrorStatus.UNKNOWN, e);

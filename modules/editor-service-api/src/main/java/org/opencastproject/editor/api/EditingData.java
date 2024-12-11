@@ -128,11 +128,17 @@ public class EditingData {
     /** content of the subtitle */
     private final String subtitle;
     private final String[] tags;
+    private final boolean deleted;
 
     public Subtitle(String id, String subtitle, String[] tags) {
+      this(id, subtitle, tags,false);
+    }
+
+    public Subtitle(String id, String subtitle, String[] tags, boolean deleted) {
       this.id = id;
       this.subtitle = subtitle;
       this.tags = tags;
+      this.deleted = deleted;
     }
 
     public String getId() {
@@ -146,6 +152,11 @@ public class EditingData {
     public String[] getTags() {
       return tags;
     }
+
+    public boolean isDeleted() {
+      return deleted;
+    }
+
   }
 }
 
