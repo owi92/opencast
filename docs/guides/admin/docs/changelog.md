@@ -4,6 +4,13 @@ Changelog
 Opencast 15
 -----------
 
+### Opencast 15.13
+
+- [[#6306](https://github.com/opencast/opencast/pull/6306)] -
+  Fixes session timeout bug by upgrading pax-web
+- [[#6242](https://github.com/opencast/opencast/pull/6242)] -
+  Backport "Attach Amberscript transcriptions as tracks"
+
 ### Opencast 15.12
 
 - [[#6296](https://github.com/opencast/opencast/pull/6296)] -
