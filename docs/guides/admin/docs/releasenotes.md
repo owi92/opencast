@@ -1,5 +1,16 @@
 # Opencast 15: Release Notes
 
+## Opencast 15.13
+
+This is the "last-last" release of Opencast 15.
+An additional release was necessary due to the inclusion of an important bug fix in
+[[#6306](https://github.com/opencast/opencast/pull/6306)].<br>
+The release includes two bug fixes:
+
+- [[#6306](https://github.com/opencast/opencast/pull/6306)] fixes a session timeout bug by upgrading pax-web
+- [[#6242](https://github.com/opencast/opencast/pull/6242)] fixes a bug in the `amberscript-attach-transcription`
+workflow operation where Amberscript transcriptions were not correctly attached as tracks
+
 ## Opencast 15.12
 
 This is the last release of Opencast 15.x.
