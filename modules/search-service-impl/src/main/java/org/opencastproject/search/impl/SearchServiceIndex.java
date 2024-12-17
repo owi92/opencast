@@ -47,6 +47,7 @@ import org.opencastproject.security.api.Role;
 import org.opencastproject.security.api.SecurityConstants;
 import org.opencastproject.security.api.SecurityService;
 import org.opencastproject.security.api.UnauthorizedException;
+import org.opencastproject.security.api.User;
 import org.opencastproject.security.util.SecurityUtil;
 import org.opencastproject.series.api.SeriesException;
 import org.opencastproject.series.api.SeriesService;
@@ -311,22 +312,25 @@ public final class SearchServiceIndex extends AbstractIndexProducer implements I
   }
 
   private void checkMPWritePermission(final String mediaPackageId) throws SearchException {
+    User user = securityService.getUser();
     try {
+      if (!persistence.exist(mediaPackageId)) {
+        throw new NotFoundException();
+      }
       AccessControlList acl = persistence.getAccessControlList(mediaPackageId);
       if (!authorizationService.hasPermission(acl, Permissions.Action.WRITE.toString())) {
-        boolean isAdmin = securityService.getUser().getRoles().stream()
+        boolean isAdmin = user.getRoles().stream()
             .map(Role::getName)
             .anyMatch(r -> r.equals(SecurityConstants.GLOBAL_ADMIN_ROLE));
         if (!isAdmin) {
-          throw new UnauthorizedException(securityService.getUser(), "Write permission denied for " + mediaPackageId,
-              acl);
+          throw new UnauthorizedException(user, "Write permission denied for " + mediaPackageId, acl);
         } else {
           logger.debug("Write for {} is not allowed by ACL, but user has {}",
               mediaPackageId, SecurityConstants.GLOBAL_ADMIN_ROLE);
         }
       }
     } catch (NotFoundException e) {
-      logger.debug("Mediapackage {} not found, allowing writes", mediaPackageId);
+      logger.debug("Mediapackage {} does not exist or was deleted, allowing writes for user {}", mediaPackageId, user);
     } catch (SearchServiceDatabaseException | UnauthorizedException e) {
       throw new SearchException(e);
     }
