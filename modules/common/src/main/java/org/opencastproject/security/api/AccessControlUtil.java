@@ -88,7 +88,7 @@ public final class AccessControlUtil {
    *           if any of the arguments are null
    */
   public static boolean isAuthorized(AccessControlList acl, User user, Organization org, Object action) {
-    return isAuthorized(acl, user, org, action, false, null);
+    return isAuthorized(acl, user, org, action, null);
   }
 
   /**
@@ -112,9 +112,6 @@ public final class AccessControlUtil {
    *          the string representation of the object (<code>#toString()</code>). This allows to group actions as enums
    *          and use them without converting them to a string manually. See
    *          {@link org.opencastproject.security.api.Permissions.Action}.
-   * @param episodeRoleId
-   *          If the user should be checked for having an authorizing episode role id. If the ACL does not belong
-   *          to a mediapackage, this won't work and should be set to false.
    * @param mediaPackageId
    *          Only required if episodeRoleId is true.
    * @return whether this action should be allowed
@@ -122,7 +119,7 @@ public final class AccessControlUtil {
    *           if any of the arguments are null
    */
   public static boolean isAuthorized(AccessControlList acl, User user, Organization org, Object action,
-      boolean episodeRoleId, String mediaPackageId) {
+      String mediaPackageId) {
     if (action == null || user == null || acl == null || org == null) {
       throw new IllegalArgumentException();
     }
@@ -133,7 +130,7 @@ public final class AccessControlUtil {
     }
 
     // Check for episode role ids, if activated
-    if (episodeRoleId && user.hasRole(getEpisodeRoleId(mediaPackageId, action.toString()))) {
+    if (mediaPackageId != null && user.hasRole(getEpisodeRoleId(mediaPackageId, action.toString()))) {
         return true;
     }
 

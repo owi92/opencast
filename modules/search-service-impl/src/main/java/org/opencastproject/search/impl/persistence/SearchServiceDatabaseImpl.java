@@ -185,8 +185,7 @@ public class SearchServiceDatabaseImpl implements SearchServiceDatabase {
         User user = securityService.getUser();
         if (!(searchMp.isLive() && currentUser.hasRole(GLOBAL_CAPTURE_AGENT_ROLE)) && accessControlXml != null) {
           AccessControlList acl = AccessControlParser.parseAcl(accessControlXml);
-          if (!AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, WRITE.toString(),
-              episodeRoleId, mediaPackageId)) {
+          if (!AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, WRITE.toString(), mediaPackageId)) {
             throw new UnauthorizedException(
                 currentUser + " is not authorized to delete media package " + mediaPackageId);
           }
@@ -367,7 +366,7 @@ public class SearchServiceDatabaseImpl implements SearchServiceDatabase {
             User currentUser = securityService.getUser();
             Organization currentOrg = securityService.getOrganization();
             if (!AccessControlUtil.isAuthorized(accessList, currentUser, currentOrg, WRITE.toString(),
-                episodeRoleId, mediaPackageId)) {
+                mediaPackageId)) {
               throw new UnauthorizedException(currentUser + " is not authorized to update media package "
                   + mediaPackageId);
             }
@@ -409,12 +408,10 @@ public class SearchServiceDatabaseImpl implements SearchServiceDatabase {
           User currentUser = securityService.getUser();
           Organization currentOrg = securityService.getOrganization();
           // There are several reasons a user may need to load a episode: to read content, to edit it, or add content
-          if (!AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, READ.toString(), episodeRoleId,
-                      mediaPackageId)
-                  && !AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, CONTRIBUTE.toString(), episodeRoleId,
-                      mediaPackageId)
-                  && !AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, WRITE.toString(), episodeRoleId,
-                      mediaPackageId)) {
+          if (!AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, READ.toString(), mediaPackageId)
+                  && !AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, CONTRIBUTE.toString(),
+              mediaPackageId)
+                  && !AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, WRITE.toString(), mediaPackageId)) {
             throw new UnauthorizedException(currentUser + " is not authorized to see episode " + mediaPackageId);
           }
         }
@@ -448,8 +445,7 @@ public class SearchServiceDatabaseImpl implements SearchServiceDatabase {
           AccessControlList acl = AccessControlParser.parseAcl(accessControlXml);
           User currentUser = securityService.getUser();
           Organization currentOrg = securityService.getOrganization();
-          if (!AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, READ.toString(),
-              episodeRoleId, mediaPackageId)) {
+          if (!AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, READ.toString(), mediaPackageId)) {
             throw new UnauthorizedException(
                 currentUser + " is not authorized to read media package " + mediaPackageId);
           }
@@ -484,8 +480,7 @@ public class SearchServiceDatabaseImpl implements SearchServiceDatabase {
           AccessControlList acl = AccessControlParser.parseAcl(accessControlXml);
           User currentUser = securityService.getUser();
           Organization currentOrg = securityService.getOrganization();
-          if (!AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, READ.toString(),
-              episodeRoleId, mediaPackageId)) {
+          if (!AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, READ.toString(), mediaPackageId)) {
             throw new UnauthorizedException(
                 currentUser + " is not authorized to read media package " + mediaPackageId);
           }
@@ -520,8 +515,7 @@ public class SearchServiceDatabaseImpl implements SearchServiceDatabase {
           AccessControlList acl = AccessControlParser.parseAcl(accessControlXml);
           User currentUser = securityService.getUser();
           Organization currentOrg = securityService.getOrganization();
-          if (!AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, READ.toString(),
-              episodeRoleId, mediaPackageId)) {
+          if (!AccessControlUtil.isAuthorized(acl, currentUser, currentOrg, READ.toString(), mediaPackageId)) {
             throw new UnauthorizedException(
                 currentUser + " is not authorized to read media package " + mediaPackageId);
           }
