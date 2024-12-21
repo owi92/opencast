@@ -16,6 +16,7 @@ jobs:
         el:
           - 8
           - 9
+          - 10
         stage:
           - testing
           - release
