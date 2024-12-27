@@ -83,9 +83,35 @@ public final class AccessControlUtil {
    *          the string representation of the object (<code>#toString()</code>). This allows to group actions as enums
    *          and use them without converting them to a string manually. See
    *          {@link org.opencastproject.security.api.Permissions.Action}.
-   * @param episodeRoleId
-   *          If the user should be checked for having an authorizing episode role id. If the ACL does not belong
-   *          to a mediapackage, this won't work and should be set to false.
+   * @return whether this action should be allowed
+   * @throws IllegalArgumentException
+   *           if any of the arguments are null
+   */
+  public static boolean isAuthorized(AccessControlList acl, User user, Organization org, Object action) {
+    return isAuthorized(acl, user, org, action, null);
+  }
+
+  /**
+   * Determines whether the {@link AccessControlList} permits a user to perform an action.
+   *
+   * There are three ways a user can be allowed to perform an action:
+   * <ol>
+   * <li>They have the superuser role</li>
+   * <li>They have their local organization's admin role</li>
+   * <li>They have a role listed in the series ACL, with write permission</li>
+   * </ol>
+   *
+   * @param acl
+   *          the {@link AccessControlList}
+   * @param user
+   *          the user
+   * @param org
+   *          the organization
+   * @param action
+   *          The action to perform. <code>action</code> may be an arbitrary object. The authorization check is done on
+   *          the string representation of the object (<code>#toString()</code>). This allows to group actions as enums
+   *          and use them without converting them to a string manually. See
+   *          {@link org.opencastproject.security.api.Permissions.Action}.
    * @param mediaPackageId
    *          Only required if episodeRoleId is true.
    * @return whether this action should be allowed
@@ -93,34 +119,32 @@ public final class AccessControlUtil {
    *           if any of the arguments are null
    */
   public static boolean isAuthorized(AccessControlList acl, User user, Organization org, Object action,
-      boolean episodeRoleId, String mediaPackageId) {
-    if (action == null || user == null || acl == null || org == null)
+      String mediaPackageId) {
+    if (action == null || user == null || acl == null || org == null) {
       throw new IllegalArgumentException();
+    }
 
     // Check for the global and local admin role
-    if (user.hasRole(GLOBAL_ADMIN_ROLE) || user.hasRole(org.getAdminRole()))
+    if (user.hasRole(GLOBAL_ADMIN_ROLE) || user.hasRole(org.getAdminRole())) {
       return true;
+    }
 
     // Check for episode role ids, if activated
-    if (episodeRoleId) {
-      if (user.hasRole(getEpisodeRoleId(mediaPackageId, action.toString()))) {
+    if (mediaPackageId != null && user.hasRole(getEpisodeRoleId(mediaPackageId, action.toString()))) {
         return true;
-      }
     }
 
     Set<Role> userRoles = user.getRoles();
     for (AccessControlEntry entry : acl.getEntries()) {
-      if (!action.toString().equals(entry.getAction()))
-        continue;
-
-      String aceRole = entry.getRole();
-      for (Role role : userRoles) {
-        if (!role.getName().equals(aceRole))
-          continue;
-
-        return entry.isAllow();
+      if (action.toString().equals(entry.getAction())) {
+        for (Role role : userRoles) {
+          if (role.getName().equals(entry.getRole())) {
+            return entry.isAllow();
+          }
+        }
       }
     }
+
     return false;
   }
 
@@ -132,7 +156,7 @@ public final class AccessControlUtil {
     return new Pred<Object>() {
       @Override
       public Boolean apply(Object action) {
-        return isAuthorized(acl, user, org, action, false, null);
+        return isAuthorized(acl, user, org, action);
       }
     };
   }
