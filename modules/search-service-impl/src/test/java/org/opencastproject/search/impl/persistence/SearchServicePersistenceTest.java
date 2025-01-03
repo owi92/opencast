@@ -170,7 +170,7 @@ public class SearchServicePersistenceTest {
       exception = true;
     }
     Assert.assertTrue(exception);
-    Assert.assertFalse(searchDatabase.exist(mediaPackage.getIdentifier().toString()));
+    Assert.assertFalse(searchDatabase.isAvailable(mediaPackage.getIdentifier().toString()));
     Assert.assertEquals(deletionDate, searchDatabase.getDeletionDate(mediaPackage.getIdentifier().toString()));
 
     Stream<Tuple<MediaPackage, String>> allMediaPackages = searchDatabase.getAllMediaPackages(50, 0);

@@ -479,7 +479,12 @@ public class SearchServiceDatabaseImpl implements SearchServiceDatabase {
     }
   }
 
-  public boolean exist(String mediaPackageId) throws SearchServiceDatabaseException {
+  /**
+   * {@inheritDoc}
+   *
+   * @see org.opencastproject.search.impl.persistence.SearchServiceDatabase#isAvailable(String)
+   */
+  public boolean isAvailable(String mediaPackageId) throws SearchServiceDatabaseException {
     try {
       return db.execTxChecked(em -> {
         Optional<SearchEntity> searchEntity = getSearchEntityQuery(mediaPackageId).apply(em);

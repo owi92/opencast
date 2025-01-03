@@ -314,7 +314,7 @@ public final class SearchServiceIndex extends AbstractIndexProducer implements I
   private void checkMPWritePermission(final String mediaPackageId) throws SearchException {
     User user = securityService.getUser();
     try {
-      if (!persistence.exist(mediaPackageId)) {
+      if (!persistence.isAvailable(mediaPackageId)) {
         throw new NotFoundException();
       }
       AccessControlList acl = persistence.getAccessControlList(mediaPackageId);
