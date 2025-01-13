@@ -24,7 +24,7 @@ as an internal service on that machine.
 You also need to rebuild the search service index. Note that the search service has a separate index which is way faster
 to rebuild and you don't need to rebuild all indexes. To start this process:
 
-- Go to the REST docs
+- Go to the REST docs on the admin node
 - Search for `/index`
 - Go to `POST /rebuild/{service}`
 - Set `Search` as service and submit
