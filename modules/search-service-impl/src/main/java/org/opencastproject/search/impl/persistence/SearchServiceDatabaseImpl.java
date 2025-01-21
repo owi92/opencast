@@ -167,7 +167,7 @@ public class SearchServiceDatabaseImpl implements SearchServiceDatabase {
    */
   @Override
   public void deleteMediaPackage(String mediaPackageId, Date deletionDate) throws SearchServiceDatabaseException,
-          NotFoundException {
+          NotFoundException, UnauthorizedException {
     try {
       db.execTxChecked(em -> {
         Optional<SearchEntity> searchEntity = getSearchEntityQuery(mediaPackageId).apply(em);
@@ -195,7 +195,7 @@ public class SearchServiceDatabaseImpl implements SearchServiceDatabase {
         searchEntity.get().setModificationDate(deletionDate);
         em.merge(searchEntity.get());
       });
-    } catch (NotFoundException e) {
+    } catch (NotFoundException | UnauthorizedException e) {
       throw e;
     } catch (Exception e) {
       logger.error("Could not delete episode {}: {}", mediaPackageId, e.getMessage());
@@ -381,6 +381,8 @@ public class SearchServiceDatabaseImpl implements SearchServiceDatabase {
           em.merge(entity.get());
         }
       });
+    } catch (UnauthorizedException e) {
+      throw e;
     } catch (Exception e) {
       logger.error("Could not update media package: {}", e.getMessage());
       throw new SearchServiceDatabaseException(e);
@@ -398,7 +400,7 @@ public class SearchServiceDatabaseImpl implements SearchServiceDatabase {
     try {
       return db.execTxChecked(em -> {
         Optional<SearchEntity> episodeEntity = getSearchEntityQuery(mediaPackageId).apply(em);
-        if (episodeEntity.isEmpty()) {
+        if (episodeEntity.isEmpty() || episodeEntity.get().getDeletionDate() != null) {
           throw new NotFoundException("No episode with id=" + mediaPackageId + " exists");
         }
 
@@ -491,6 +493,23 @@ public class SearchServiceDatabaseImpl implements SearchServiceDatabase {
       throw e;
     } catch (Exception e) {
       logger.error("Could not get deletion date {}: {}", mediaPackageId, e.getMessage());
+      throw new SearchServiceDatabaseException(e);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @see org.opencastproject.search.impl.persistence.SearchServiceDatabase#isAvailable(String)
+   */
+  public boolean isAvailable(String mediaPackageId) throws SearchServiceDatabaseException {
+    try {
+      return db.execTxChecked(em -> {
+        Optional<SearchEntity> searchEntity = getSearchEntityQuery(mediaPackageId).apply(em);
+        return searchEntity.stream().anyMatch(entity -> entity.getDeletionDate() == null);
+      });
+    } catch (Exception e) {
+      logger.error("Error while checking if mediapackage {} exists in database: {}", mediaPackageId, e.getMessage());
       throw new SearchServiceDatabaseException(e);
     }
   }
