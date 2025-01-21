@@ -801,7 +801,7 @@ function($, bootbox, _, alertify, jsyaml) {
   function loadSeries(cleanGrid, rest, callback) {
     log('Loading Series with: ' + rest);
     active = 'series';
-    var requestUrl = restEndpoint + '/series.json'
+    var requestUrl = restEndpoint + 'series.json'
       + '?limit=' + bufferEntries + '&offset=' + (page - 1) * bufferEntries + '&' + rest;
     $.ajax({
       url: requestUrl,

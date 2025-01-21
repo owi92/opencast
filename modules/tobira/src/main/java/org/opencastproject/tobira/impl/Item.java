@@ -339,7 +339,7 @@ class Item {
     return Arrays.stream(mp.getAttachments())
       .filter(a -> a.getFlavor().getSubtype().equals("segment+preview"))
       .map(s -> Jsons.obj(
-          Jsons.p("uri", s.toString()),
+          Jsons.p("uri", s.getURI().toString()),
           Jsons.p("startTime", MediaTimePointImpl.parseTimePoint(
               s.getReference().getProperty("time")
           ).getTimeInMilliseconds())
