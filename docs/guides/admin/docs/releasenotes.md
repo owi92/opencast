@@ -1,5 +1,9 @@
 # Opencast 16: Release Notes
 
+## Opencast 16.8
+
+This is a maintenance release of Opencast 16. It fixes several minor bugs.
+
 ## Opencast 16.7
 
 Opencast 16.7 is a security and maintenance release.
