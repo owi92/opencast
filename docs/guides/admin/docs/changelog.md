@@ -4,6 +4,33 @@ Changelog
 Opencast 17
 -----------
 
+### Opencast 17.1
+
+- [[#6432](https://github.com/opencast/opencast/pull/6432)] -
+  Update to admin interface release 2025-01-21
+- [[#6419](https://github.com/opencast/opencast/pull/6419)] -
+  Remove superfluous slash in endpoint URL when loading series from Engage UI
+- [[#6415](https://github.com/opencast/opencast/pull/6415)] -
+  Document OpenSearch plugin requirements
+- [[#6390](https://github.com/opencast/opencast/pull/6390)] -
+  Fix jQuery mime type
+- [[#6388](https://github.com/opencast/opencast/pull/6388)] -
+  Update editor to version 2025-01-08
+- [[#6384](https://github.com/opencast/opencast/pull/6384)] -
+  Drop Paella Dependabot Batcher
+- [[#6379](https://github.com/opencast/opencast/pull/6379)] -
+  Fix security config to actually make `/tobira/version` public
+- [[#6364](https://github.com/opencast/opencast/pull/6364)] -
+  Refactor isAuthorized utility function
+- [[#6362](https://github.com/opencast/opencast/pull/6362)] -
+  Add "Show for new or existing" attribute to asset upload options
+- [[#6361](https://github.com/opencast/opencast/pull/6361)] -
+  Allow removing subtitles
+- [[#6317](https://github.com/opencast/opencast/pull/6317)] -
+  Add tobira series endpoint to remove paths
+- [[#6241](https://github.com/opencast/opencast/pull/6241)] -
+  Editor: Unify endpoints for saving
+
 ### Opencast 17.0
 
 - [[#6309](https://github.com/opencast/opencast/pull/6309)] -
