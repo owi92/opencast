@@ -1,5 +1,15 @@
 # Opencast 17: Release Notes
 
+## Opencast 17.1
+
+This release contains a couple of bug fixes. It also includes new versions for the editor
+([2025-01-08](https://github.com/opencast/opencast-editor/releases/tag/2025-01-08)) and the admin interface
+([2025-01-21](https://github.com/opencast/opencast-admin-interface/releases/tag/2025-01-21)). See the respective release
+notes for more details.
+
+One can now also remove subtitles from within the editor [[#6361](https://github.com/opencast/opencast/pull/6361)] and
+configure asset upload options in more detail [[#6362](https://github.com/opencast/opencast/pull/6362)].
+
 ## Opencast 17.0
 
 ### Features
