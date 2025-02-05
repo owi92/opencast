@@ -25,6 +25,10 @@ updates:
   directory: "/modules/lti"
   schedule:
     interval: monthly
+  groups:
+    fontawesome:
+      patterns:
+        - "@fortawesome*"
   open-pull-requests-limit: 10
 - package-ecosystem: npm
   directory: "/modules/runtime-info-ui"
