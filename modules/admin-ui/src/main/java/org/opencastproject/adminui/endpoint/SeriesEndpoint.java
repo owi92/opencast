@@ -658,8 +658,64 @@ public class SeriesEndpoint {
             "title", title));
     tobiraParamsObject.put("series", series);
 
+    var newPages = (List<JSONObject>) tobiraParamsObject.get("newPages");
+    var parentPath = (String) tobiraParamsObject.get("parentPagePath");
+
     try {
-      tobira.mount(tobiraParamsObject);
+      // Tell Tobira to create a preliminary DB entry for the series.
+      tobira.announce(series);
+
+      if (newPages != null || parentPath != null) {
+        // List of realm objects (ex. `{"pathSegment": "bar", "name": "foo"}`).
+        var realmLineage = new ArrayList<JSONObject>();
+        // List of path segments needed to build the target path.
+        var pathSegments = new ArrayList<String>();
+
+        if (parentPath != null) {
+          for (String segment : parentPath.split("/")) {
+            if (!segment.isEmpty()) {
+              // The Tobira endpoint for realm creation has to be provided with each existing realm
+              // on the path to the new realms.
+              // While the realm object type is defined with both path and name props, the names
+              // aren't passed by the Admin UI and don't matter for the underlying database checks.
+              // We just add the "dummy" name to prevent graphql errors in Tobira.
+              pathSegments.add(segment);
+              var realmObject = new JSONObject();
+              realmObject.put("pathSegment", segment);
+              realmObject.put("name", "dummy");
+              realmLineage.add(realmObject);
+            }
+          }
+        }
+
+        if (newPages != null) {
+          for (JSONObject page : newPages) {
+            if (!page.containsKey("name")) {
+              // The same realm object type described above is needed for new paths.
+              // The Admin UI makes sure that each new realm that does not contain the new series
+              // has a valid name. However, the realm where the series is mounted does not need a
+              // given name as that will be overwritten by the series name anyway.
+              page.put("name", "dummy");
+            }
+            realmLineage.add(page);
+            pathSegments.add((String) page.get("pathSegment"));
+          }
+        }
+
+        if (!realmLineage.isEmpty()) {
+          // Create new realms.
+          tobira.createRealmLineage(realmLineage);
+        }
+
+        if (!pathSegments.isEmpty()) {
+          String targetPath = "/" + String.join("/", pathSegments);
+          var mountParams = new JSONObject();
+          mountParams.put("seriesId", seriesId);
+          mountParams.put("targetPath", targetPath);
+          // Finally, mount the series.
+          tobira.addSeriesMountPoint(mountParams);
+        }
+      }
     } catch (TobiraException e) {
       return false;
     }
