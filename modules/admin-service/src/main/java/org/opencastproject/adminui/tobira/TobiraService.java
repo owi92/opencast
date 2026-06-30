@@ -103,15 +103,14 @@ public final class TobiraService {
             .get("event");
   }
 
-  public void mount(Map<String, Object> variables) throws TobiraException {
-    request(
-        "mutation AdminUIMountSeries($series: NewSeries!, $parentPagePath: String!, $newPages: [RealmSpecifier!]!) {"
-                + "  mountSeries(series: $series, parentRealmPath: $parentPagePath, newRealms: $newPages) {"
-                // We need to query something here, but we really don't care at the moment
-                + "    id"
-                + "  }"
-                + "}",
-        variables);
+  public void announce(Map<String, Object> series) throws TobiraException {
+      request(
+            "mutation AdminUIAnnounceSeries($series: NewSeries!) {"
+                    + "  announceSeries(series: $series) {"
+                    + "    id"
+                    + "  }"
+                    + "}",
+            Map.of("series", series));
   }
 
   public Integer createRealmLineage(List<JSONObject> pathComponents) throws TobiraException {
